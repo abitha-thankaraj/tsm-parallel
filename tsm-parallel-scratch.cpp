@@ -18,6 +18,7 @@
 int *fact;
 void ithPermutation( int n, int i)
 {
+    //Ref: https://en.wikipedia.org/wiki/Factorial_number_system
     int j, k = 0;
     int *perm = new int[n]();
 
