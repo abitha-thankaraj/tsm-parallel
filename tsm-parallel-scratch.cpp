@@ -19,7 +19,7 @@ int *fact;
 void ithPermutation( int n, int i)
 {
     int j, k = 0;
-    int *perm = (int *)calloc(n, sizeof(int));
+    int *perm = new int[n]();
 
     // compute factorial code
     for (k = 0; k < n; ++k)
@@ -42,7 +42,7 @@ void ithPermutation( int n, int i)
         printf("%d ", perm[k]);
     }
 
-    free(perm);
+    delete[] perm;
 }
 
 int main(int argc, char *argv[])
