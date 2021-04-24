@@ -143,15 +143,15 @@ int main(int argc, char *argv[])
 
 
 /******************************* calculate cost of i-th permutation path*********************/
-        int cost=0;
+        int cost=data[0*n + perm[0]];
 
-        for (k=0; k<p; k++){
+        for (k=0; k<p-1; k++){
             cost+=data[perm[k]*n + perm[k+1]];
         }
         if (cost < min_cost){
             min_cost = cost;
             for (k=0;k<p;k++){
-               min_cost_path[k+1] = perm[k];
+                min_cost_path[k+1] = perm[k];
             }
         }
 
