@@ -19,6 +19,15 @@ int *fact;
 void ithPermutation( int n, int i)
 {
     //Ref: https://en.wikipedia.org/wiki/Factorial_number_system
+    /* https://stackoverflow.com/questions/7918806/finding-n-th-permutation-without-computing-others
+     *  when considering the lexicographical order of permutations, you should use the factorial decomposition at your advantage.
+
+From a practical point of view, this is how I see it:
+
+-   Perform a sort of Euclidian division, except you do it with factorial numbers, starting with (n-1)!, (n-2)!, and so on.
+-   Keep the quotients in an array. The i-th quotient should be a number between 0 and n-i-1 inclusive, where i goes from 0 to n-1.
+    This array is your permutation. The problem is that each quotient does not care for previous values, so you need to adjust them. More explicitly, you need to increment every value as many times as there are previous values that are lower or equal.
+     * */
     int j, k = 0;
     int *perm = new int[n]();
 
