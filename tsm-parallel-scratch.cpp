@@ -43,7 +43,6 @@ void ithPermutation( int n, int i)
         printf("%d ", perm[k]);
     }
 
-
     free(perm);
 }
 
