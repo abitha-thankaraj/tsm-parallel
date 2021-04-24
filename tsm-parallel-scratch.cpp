@@ -15,7 +15,6 @@
 #include <stdint.h>
 #include <omp.h>
 //global variable for factorial
-#define NUM_THREADS 8
 int *fact;
 void ithPermutation( int n, int i)
 {
@@ -51,15 +50,17 @@ int main(int argc, char *argv[])
     int n,t;
     std::string inputfile;
 
-    if(argc != 3 ){
-        printf("usage: ./shp n filename\n");
+    if(argc != 4 ){
+        printf("usage: ./ptsm n t filename\n");
         printf("n: number of cities\n");
+        printf("t: number of threads\n");
         printf("filename: name of input file\n");
         exit(1);
     }
 
     n = atoi(argv[1]);
-    inputfile = argv[2];
+    t = atoi(argv[2]);
+    inputfile = argv[3];
 
 //Error handling for number of cities
     if (n <0 || n>12){
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
     int min_cost = 9999999;
     int shortest_path_permutation =0;
 
-#pragma omp parallel for num_threads(NUM_THREADS)  default(none) shared(min_cost, fact, data, n, shortest_path_permutation) schedule(static)
+#pragma omp parallel for num_threads(t)  default(none) shared(min_cost, fact, data, n, shortest_path_permutation) schedule(static)
 
     for (int i=0; i<fact[n-1]; i++){
 //        ithPermutation(n-1 , i );
