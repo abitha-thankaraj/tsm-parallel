@@ -22,11 +22,11 @@ void ithPermutation( int n, int i)
     /* https://stackoverflow.com/questions/7918806/finding-n-th-permutation-without-computing-others
      *  when considering the lexicographical order of permutations, you should use the factorial decomposition at your advantage.
 
-From a practical point of view, this is how I see it:
+    From a practical point of view, this is how I see it:
 
--   Perform a sort of Euclidian division, except you do it with factorial numbers, starting with (n-1)!, (n-2)!, and so on.
--   Keep the quotients in an array. The i-th quotient should be a number between 0 and n-i-1 inclusive, where i goes from 0 to n-1.
-    This array is your permutation. The problem is that each quotient does not care for previous values, so you need to adjust them. More explicitly, you need to increment every value as many times as there are previous values that are lower or equal.
+    -   Perform a sort of Euclidian division, except you do it with factorial numbers, starting with (n-1)!, (n-2)!, and so on.
+    -   Keep the quotients in an array. The i-th quotient should be a number between 0 and n-i-1 inclusive, where i goes from 0 to n-1.
+        This array is your permutation. The problem is that each quotient does not care for previous values, so you need to adjust them. More explicitly, you need to increment every value as many times as there are previous values that are lower or equal.
      * */
     int j, k = 0;
     int *perm = new int[n]();
@@ -38,18 +38,18 @@ From a practical point of view, this is how I see it:
         i = i % fact[n - 1 - k];
     }
 
-    // readjust values to obtain the permutation
-    // start from the end and check if preceding values are lower
+    // re-adjust values to obtain the permutation
+    // start from the end and verify if preceding values are lower
     for (k = n - 1; k > 0; --k)
         for (j = k - 1; j >= 0; --j)
             if (perm[j] <= perm[k])
                 perm[k]++;
 
-    // print permutation
-    printf("%d ", 0);
+    // print permutation path
+    std::cout<<"0 ";
     for (k = 0; k < n; ++k) {
         perm[k] += 1;
-        printf("%d ", perm[k]);
+        std::cout<<perm[k]<< " ";
     }
 
     delete[] perm;
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
      }
     */
 /*******************************Factorial array*********************/
-    // Compute factorial
+    // Compute factorial - update global array
     fact = new int[n]();
     int k=0;
     fact[k] = 1;
@@ -128,8 +128,7 @@ int main(int argc, char *argv[])
 #pragma omp parallel for num_threads(t)  default(none) shared(min_cost, fact, data, n, shortest_path_permutation) schedule(static)
 
     for (int i=0; i<fact[n-1]; i++){
-//        ithPermutation(n-1 , i );
-/******************************* generate i-th permutation *********************/
+/******************************* generate i-th permutation - factroid method *********************/
 
         int p =n-1;
         int q =i;
@@ -137,21 +136,17 @@ int main(int argc, char *argv[])
 
         int *perm = new int[p]();
 
-        // compute factorial code
         for (k = 0; k < p; ++k)
         {
             perm[k] = q / fact[p - 1 - k];
             q = q % fact[p - 1 - k];
         }
 
-        // readjust values to obtain the permutation
-        // start from the end and check if preceding values are lower
         for (k = p - 1; k > 0; --k)
             for (j = k - 1; j >= 0; --j)
                 if (perm[j] <= perm[k])
                     perm[k]++;
 
-        // print permutation
         for (k = 0; k < p; ++k) {
             perm[k] += 1;
         }
@@ -166,8 +161,7 @@ int main(int argc, char *argv[])
 
         if (cost < min_cost) {
 #pragma omp critical
-
-            {
+            { // Race condition. Check again if it is minimum after entering critical section.
                 if (cost < min_cost) {
                     min_cost=cost;
                     shortest_path_permutation= i;
@@ -176,7 +170,6 @@ int main(int argc, char *argv[])
         }
         delete[] perm;
     }
-    printf("Min cost is: %d\nMin cost path is: ", min_cost);
+    std::cout<<"Min cost is  "<<min_cost<<"\nMin cost path is :\n";
     ithPermutation (n-1 , shortest_path_permutation );
-    printf("\n");
 }
